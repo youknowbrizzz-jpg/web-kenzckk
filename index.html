@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LANGSSY HOST | Bright Cloud Panel</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        :root {
+            /* Tema Cerah (Bright Theme) */
+            --bg-body: #f0f4f8;
+            --bg-card: #ffffff;
+            --primary: #4A90E2;
+            --primary-hover: #357ABD;
+            --secondary: #FF8C42;
+            --success: #2ECC71;
+            --danger: #E74C3C;
+            --text-main: #2c3e50;
+            --text-sub: #7f8c8d;
+            --border: #e1e8ed;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            --radius: 12px;
+            --transition: 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(74, 144, 226, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(255, 140, 66, 0.1) 0%, transparent 40%);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ================= LOGIN SCREEN ================= */
+        #login-screen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-body);
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .login-box {
+            background: var(--bg-card);
+            padding: 50px 40px;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 450px;
+            border: 1px solid var(--border);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-box::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 6px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+
+        .login-logo {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 10px;
+        }
+        .login-logo span { color: var(--primary); }
+
+        .login-subtitle {
+            color: var(--text-sub);
+            font-size: 0.9rem;
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 8px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-sub);
+            font-size: 1.1rem;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            padding: 14px 15px 14px 45px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-size: 1rem;
+            color: var(--text-main);
+            outline: none;
+            transition: var(--transition);
+            background: #f9fbfd;
+        }
+
+        .input-wrapper input:focus {
+            border-color: var(--primary);
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.1);
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, var(--primary), #5c9deb);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 10px;
+            box-shadow: 0 5px 15px rgba(74, 144, 226, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(74, 144, 226, 0.4);
+        }
+
+        .error-msg {
+            color: var(--danger);
+            font-size: 0.85rem;
+            margin-top: 15px;
+            display: none;
+            font-weight: 600;
+        }
+
+        /* ================= MAIN WEBSITE ================= */
+        #main-website {
+            display: none;
+            min-height: 100vh;
+        }
+
+        /* Navbar */
+        nav {
+            background: var(--bg-card);
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.03);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav-brand {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .nav-brand i { color: var(--primary); }
+
+        .nav-user {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+        .user-info .name {
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+        .user-info .email {
+            font-size: 0.8rem;
+            color: var(--text-sub);
+        }
+
+        .btn-logout {
+            background: #ffeaa7;
+            color: #d63031;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .btn-logout:hover {
+            background: #d63031;
+            color: #fff;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 5%;
+        }
+
+        /* Welcome Banner */
+        .welcome-banner {
+            background: linear-gradient(135deg, var(--primary), #5c9deb);
+            color: #fff;
+            padding: 40px;
+            border-radius: var(--radius);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(74, 144, 226, 0.2);
+        }
+
+        .welcome-text h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        .welcome-text p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .welcome-icon i {
+            font-size: 5rem;
+            opacity: 0.3;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            padding: 25px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+        }
+        .stat-icon.blue { background: rgba(74, 144, 226, 0.1); color: var(--primary); }
+        .stat-icon.orange { background: rgba(255, 140, 66, 0.1); color: var(--secondary); }
+        .stat-icon.green { background: rgba(46, 204, 113, 0.1); color: var(--success); }
+
+        .stat-info h3 {
+            font-size: 0.85rem;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+        .stat-info p {
+            font-size: 1.5rem;
+            font-weight: 800;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* Panel Management */
+        .panel-section {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .panel-header h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.3rem;
+            color: var(--text-main);
+        }
+
+        /* Server Cards */
+        .server-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .server-card {
+            background: #f9fbfd;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 20px;
+            transition: var(--transition);
+        }
+        .server-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .server-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .server-top h4 {
+            font-size: 1.1rem;
+            color: var(--text-main);
+        }
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .status-badge.running { background: rgba(46, 204, 113, 0.15); color: var(--success); }
+        .status-badge.stopped { background: rgba(231, 76, 60, 0.15); color: var(--danger); }
+
+        .server-specs {
+            font-size: 0.85rem;
+            color: var(--text-sub);
+            margin-bottom: 20px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .server-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-action {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.85rem;
+        }
+
+        .btn-start { background: #e3f9e5; color: #27ae60; }
+        .btn-start:hover { background: #27ae60; color: #fff; }
+        
+        .btn-stop { background: #fdecea; color: #c0392b; }
+        .btn-stop:hover { background: #c0392b; color: #fff; }
+
+        .btn-restart { background: #e8f0fe; color: var(--primary); }
+        .btn-restart:hover { background: var(--primary); color: #fff; }
+
+        /* Domain Input */
+        .add-domain-box {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .add-domain-box input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            outline: none;
+            transition: var(--transition);
+        }
+        .add-domain-box input:focus { border-color: var(--primary); }
+        .add-domain-box button {
+            padding: 0 25px;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .add-domain-box button:hover { background: var(--primary-hover); }
+
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.9rem;
+        }
+        th {
+            background: #f9fbfd;
+            color: var(--text-sub);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+        }
+
+        /* Contact Section */
+        .contact-section {
+            text-align: center;
+            padding: 40px 20px;
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            margin-bottom: 50px;
+        }
+        .contact-section h2 {
+            font-family: 'Poppins', sans-serif;
+            margin-bottom: 10px;
+        }
+        .contact-section p {
+            color: var(--text-sub);
+            margin-bottom: 20px;
+        }
+        .btn-telegram {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: #0088cc;
+            color: #fff;
+            padding: 15px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            box-shadow: 0 5px 15px rgba(0, 136, 204, 0.3);
+        }
+        .btn-telegram:hover {
+            background: #006699;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 136, 204, 0.4);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-user .user-info { display: none; }
+            .welcome-banner { flex-direction: column; text-align: center; gap: 20px; }
+            .add-domain-box { flex-direction: column; }
+            .add-domain-box button { padding: 12px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ================= LOGIN SCREEN ================= -->
+    <div id="login-screen">
+        <div class="login-box">
+            <div class="login-logo">LANGSSY<span>HOST</span></div>
+            <p class="login-subtitle">Silakan login untuk mengakses Cloud Panel</p>
+            
+            <div class="input-group">
+                <label>Username</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="inputUsername" placeholder="Masukkan Username">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>Gmail</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="inputEmail" placeholder="contoh@gmail.com">
+                </div>
+            </div>
+
+            <button class="btn-primary" onclick="prosesLogin()">Login ke Dashboard</button>
+            <p class="error-msg" id="loginError">Username atau Gmail tidak valid!</p>
+        </div>
+    </div>
+
+    <!-- ================= MAIN WEBSITE ================= -->
+    <div id="main-website">
+        
+        <!-- Navbar -->
+        <nav>
+            <div class="nav-brand">
+                <i class="fas fa-cloud"></i> LANGSSY<span>HOST</span>
+            </div>
+            <div class="nav-user">
+                <div class="user-info">
+                    <div class="name" id="displayUsername">User</div>
+                    <div class="email" id="displayEmail">user@gmail.com</div>
+                </div>
+                <button class="btn-logout" onclick="prosesLogout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </div>
+        </nav>
+
+        <div class="container">
+            <!-- Welcome Banner -->
+            <div class="welcome-banner">
+                <div class="welcome-text">
+                    <h1>Selamat Datang, <span id="welcomeName">User</span>!</h1>
+                    <p>Kelola server dan domain lo dengan mudah di sini.</p>
+                </div>
+                <div class="welcome-icon">
+                    <i class="fas fa-server"></i>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon blue"><i class="fas fa-microchip"></i></div>
+                    <div class="stat-info">
+                        <h3>Total Server</h3>
+                        <p id="totalServer">2</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon green"><i class="fas fa-check-circle"></i></div>
+                    <div class="stat-info">
+                        <h3>Server Aktif</h3>
+                        <p id="activeServer">1</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon orange"><i class="fas fa-globe"></i></div>
+                    <div class="stat-info">
+                        <h3>Total Domain</h3>
+                        <p id="totalDomain">0</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Manajemen Server -->
+            <div class="panel-section">
+                <div class="panel-header">
+                    <h2><i class="fas fa-server" style="color: var(--primary);"></i> Manajemen Server</h2>
+                </div>
+                <div class="server-list" id="serverList">
+                    <!-- Server 1 -->
+                    <div class="server-card" id="server-1">
+                        <div class="server-top">
+                            <h4>Web Server 01</h4>
+                            <span class="status-badge running" id="status-1">Running</span>
+                        </div>
+                        <div class="server-specs">
+                            <span><i class="fas fa-microchip"></i> 2 vCPU</span>
+                            <span><i class="fas fa-memory"></i> 4GB RAM</span>
+                            <span><i class="fas fa-hdd"></i> 50GB SSD</span>
+                        </div>
+                        <div class="server-actions">
+                            <button class="btn-action btn-start" onclick="kontrolServer(1, 'start')">Start</button>
+                            <button class="btn-action btn-stop" onclick="kontrolServer(1, 'stop')">Stop</button>
+                            <button class="btn-action btn-restart" onclick="kontrolServer(1, 'restart')">Restart</button>
+                        </div>
+                    </div>
+
+                    <!-- Server 2 -->
+                    <div class="server-card" id="server-2">
+                        <div class="server-top">
+                            <h4>Database Server</h4>
+                            <span class="status-badge stopped" id="status-2">Stopped</span>
+                        </div>
+                        <div class="server-specs">
+                            <span><i class="fas fa-microchip"></i> 4 vCPU</span>
+                            <span><i class="fas fa-memory"></i> 8GB RAM</span>
+                            <span><i class="fas fa-hdd"></i> 100GB NVMe</span>
+                        </div>
+                        <div class="server-actions">
+                            <button class="btn-action btn-start" onclick="kontrolServer(2, 'start')">Start</button>
+                            <button class="btn-action btn-stop" onclick="kontrolServer(2, 'stop')">Stop</button>
+                            <button class="btn-action btn-restart" onclick="kontrolServer(2, 'restart')">Restart</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Manajemen Domain -->
+            <div class="panel-section">
+                <div class="panel-header">
+                    <h2><i class="fas fa-globe" style="color: var(--secondary);"></i> Manajemen Domain</h2>
+                </div>
+                
+                <div class="add-domain-box">
+                    <input type="text" id="inputDomain" placeholder="Ketik domain baru (contoh: domainlo.com)">
+                    <button onclick="tambahDomain()">Tambah Domain</button>
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nama Domain</th>
+                            <th>Status</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelDomain">
+                        <!-- Data akan diisi oleh Javascript -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Contact Section -->
+            <div class="contact-section">
+                <h2>Butuh Bantuan?</h2>
+                <p>Hubungi tim support kami melalui Telegram untuk kendala teknis.</p>
+                <a href="https://t.me/langssy" target="_blank" class="btn-telegram">
+                    <i class="fab fa-telegram-plane"></i> Hubungi @langssy
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ================= JAVASCRIPT LOGIC ================= -->
+    <script>
+        // 1. CEK SESSION SAAT HALAMAN DIMUAT
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedUser = localStorage.getItem('ls_user');
+            const savedEmail = localStorage.getItem('ls_email');
+
+            if (savedUser && savedEmail) {
+                // Jika sudah login, langsung tampilkan dashboard
+                tampilkanDashboard(savedUser, savedEmail);
+            }
+        });
+
+        // 2. FUNGSI LOGIN
+        function prosesLogin() {
+            const user = document.getElementById('inputUsername').value.trim();
+            const email = document.getElementById('inputEmail').value.trim();
+            const errorMsg = document.getElementById('loginError');
+
+            // Validasi: Tidak boleh kosong
+            if (!user || !email) {
+                errorMsg.innerText = "Username dan Gmail wajib diisi!";
+                errorMsg.style.display = 'block';
+                return;
+            }
+
+            // Validasi: Harus berakhiran @gmail.com
+            if (!email.endsWith('@gmail.com')) {
+                errorMsg.innerText = "Format email harus menggunakan @gmail.com!";
+                errorMsg.style.display = 'block';
+                return;
+            }
+
+            // Simpan ke LocalStorage (Simulasi Session)
+            localStorage.setItem('ls_user', user);
+            localStorage.setItem('ls_email', email);
+
+            // Masuk ke Dashboard
+            tampilkanDashboard(user, email);
+        }
+
+        // 3. FUNGSI TAMPILKAN DASHBOARD
+        function tampilkanDashboard(user, email) {
+            // Sembunyikan layar login
+            const loginScreen = document.getElementById('login-screen');
+            loginScreen.style.opacity = '0';
+            setTimeout(() => {
+                loginScreen.style.display = 'none';
+            }, 500);
+
+            // Tampilkan Main Website
+            document.getElementById('main-website').style.display = 'block';
+
+            // Set Data User ke Navbar & Welcome
+            document.getElementById('displayUsername').innerText = user;
+            document.getElementById('displayEmail').innerText = email;
+            document.getElementById('welcomeName').innerText = user;
+            
+            // Load Data Domain dari LocalStorage
+            muatDomain();
+        }
+
+        // 4. FUNGSI LOGOUT
+        function prosesLogout() {
+            // Hapus session
+            localStorage.removeItem('ls_user');
+            localStorage.removeItem('ls_email');
+
+            // Reload halaman untuk kembali ke login
+            window.location.reload();
+        }
+
+        // 5. FUNGSI KONTROL SERVER (Start/Stop/Restart)
+        function kontrolServer(serverId, action) {
+            const statusBadge = document.getElementById(`status-${serverId}`);
+            
+            if (action === 'start') {
+                statusBadge.className = 'status-badge running';
+                statusBadge.innerText = 'Running';
+                alert(`Server ${serverId} berhasil dinyalakan!`);
+            } 
+            else if (action === 'stop') {
+                statusBadge.className = 'status-badge stopped';
+                statusBadge.innerText = 'Stopped';
+                alert(`Server ${serverId} dimatikan.`);
+            } 
+            else if (action === 'restart') {
+                statusBadge.className = 'status-badge stopped';
+                statusBadge.innerText = 'Restarting...';
+                
+                setTimeout(() => {
+                    statusBadge.className = 'status-badge running';
+                    statusBadge.innerText = 'Running';
+                    alert(`Server ${serverId} berhasil di-restart!`);
+                }, 1500);
+            }
+
+            updateStatistik();
+        }
+
+        // 6. FUNGSI MANAJEMEN DOMAIN
+        let listDomain = JSON.parse(localStorage.getItem('ls_domains')) || [];
+
+        function tambahDomain() {
+            const input = document.getElementById('inputDomain');
+            const domainBaru = input.value.trim();
+
+            if (!domainBaru) {
+                alert('Masukkan nama domain terlebih dahulu!');
+                return;
+            }
+
+            // Cek duplikasi
+            if (listDomain.includes(domainBaru)) {
+                alert('Domain sudah ada di dalam list!');
+                return;
+            }
+
+            // Tambah ke array
+            listDomain.push(domainBaru);
+            localStorage.setItem('ls_domains', JSON.stringify(listDomain));
+            
+            input.value = '';
+            muatDomain();
+            updateStatistik();
+        }
+
+        function hapusDomain(index) {
+            if (confirm('Yakin ingin menghapus domain ini?')) {
+                listDomain.splice(index, 1);
+                localStorage.setItem('ls_domains', JSON.stringify(listDomain));
+                muatDomain();
+                updateStatistik();
+            }
+        }
+
+        function muatDomain() {
+            const tbody = document.getElementById('tabelDomain');
+            tbody.innerHTML = '';
+
+            if (listDomain.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:#7f8c8d;">Belum ada domain yang ditambahkan.</td></tr>`;
+                return;
+            }
+
+            listDomain.forEach((domain, index) => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td><strong>${domain}</strong></td>
+                        <td><span style="color: var(--success); font-weight: bold;"><i class="fas fa-check-circle"></i> Active</span></td>
+                        <td>
+                            <button onclick="hapusDomain(${index})" style="background:#fdecea; color:#c0392b; border:none; padding:8px 15px; border-radius:6px; cursor:pointer; font-weight:600;">
+                                <i class="fas fa-trash"></i> Hapus
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        // 7. UPDATE STATISTIK DASHBOARD
+        function updateStatistik() {
+            // Total Domain
+            document.getElementById('totalDomain').innerText = listDomain.length;
+
+            // Hitung Server Aktif
+            let activeCount = 0;
+            document.querySelectorAll('.status-badge').forEach(badge => {
+                if (badge.classList.contains('running')) {
+                    activeCount++;
+                }
+            });
+            document.getElementById('activeServer').innerText = activeCount;
+        }
+
+        // Jalankan update statistik pertama kali
+        updateStatistik();
+    </script>
+</body>
+</html>
